@@ -1,59 +1,51 @@
+#modified Chris Liepold's program by Alex Smith
+#should convert to _ spacing and not camel case per python style guidelines :(
+import sys
 import numpy as np
-# from mpl_toolkits.mplot3d import Axes3D
-# from scipy import loadtxt, optimize, constants
-# from scipy.optimize import curve_fit
-# from scipy.odr import *
-# import matplotlib.pyplot as plt
-# import random as random
-# from Sites import generate_seed, plot_sphere, balance_points
-import math
-# import fileinput
-import os
-import re
-from StringIO import StringIO
 
-def read_tr(fname,outname):
-	print fname
-	num_lines = sum(1 for line in open(fname))
+#consider using numpy tofile and fromfile if it starts to get too slow for the input sizes
 
-	with open(fname, 'r') as f:
-		x = f.tell()
-		nAtoms = int(f.readline())
-		f.seek(x)
-		# nAtoms = 16
-		nframes = num_lines / (nAtoms + 2)
-		outarr = np.zeros((nAtoms * nframes, 5))
-		for i in range(0,num_lines):
-			if i % (num_lines / 100) == 0:
-				print int((100. * i) / num_lines)
-			line = f.readline()
-			atomNumber = (i % (nAtoms + 2)) - 2
-			frameNumber = (i - atomNumber - 2) / (nAtoms + 2)
-			if atomNumber > -1:
-				x,y,z = np.genfromtxt(StringIO(line),usecols=(1,2,3),unpack = True)
-				index = frameNumber * nAtoms + atomNumber
-				outarr[index,0:3] = [x,y,z]
-				outarr[index,3] = frameNumber
-				outarr[index,4] = atomNumber
-	print "Loaded all lines"
-	np.savetxt(outname,outarr,fmt = ['%3.5e','%3.5e','%3.5e','%1i','%1i'])
-	return outarr
-		# savetxt("out.tsv",outarr)
-			# print i
-	# print nAtoms
-	# print num_lines
-	# for line in open(fname):
-	# 	linetxt = readline()
-	
-	# for i in range(1,nframes + 1):
-	# 	out = np.genfromtxt(fname,max_rows = nAtoms, skip_header = ((i - 1) * (2 + nAtoms) + 2))
-	# 	print np.shape(out)
-	# 	print i
-	# print nAtoms
-	# print num_lines
-	# print num_lines / (nAtoms +2)
+#Takes in a string and returns whether or not it's something that marks that it's a
+#new time step. There are three conditions for this:
+#len < 1 if has reached EOF; first char is A if at a new time step;
+#length of line.split() is 1 if it's the line saying how many particles there are
+def isNewStep(line):
+    return len(line) < 1 or line[0] == 'A' or len(line.split()) == 1 
 
+#Takes in a line (a valid time step as a string) and returns the x,y,z values which
+# are located in line[1],line[2], line[3] (n.b. python slices are half open intervals 
+#[1,4) -> so a = [0,1,2,3,4] then a[1:4] = [1,2,3])
+def parseLine(line): 
+    return map(float, line.split()[1:4])
 
-read_tr("dump2.xyz","dump2.tr")
+#Takes in a string of the path to the file, and returns a 2D array of the timesteps as 
+#a track file
+def convertToTrackFile(f):
+    #start at -1 to have 0 - based indexing
+    atomNumber = -1
+    frameNumber = -1
+    output = []
+    for line in open(f):
+        if isNewStep(line):
+            atomNumber = -1
+            frameNumber += 0.5 # do this because there are two new frame lines between
+            #each time step
+            continue
 
-# np.savetxt("dump2.tr",read_tr("dump2.xyz"))
+        atomNumber += 1
+        (x,y,z) = parseLine(line)
+        output.append([x,y,z,frameNumber, atomNumber])
+    return output
+
+#only run this part if it's called from command line (so this can be imported into other programs)
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print "Specify the input and (optional) output file"
+        exit(1)
+    f = sys.argv[1]
+    if len(sys.argv) == 2:
+        outname = f[:-4] + '.tr'
+    else:
+        outname = sys.argv[2]
+    outarr = convertToTrackFile(f)
+    np.savetxt(outname,outarr,fmt = ['%3.5e','%3.5e','%3.5e','%1i','%1i'])
