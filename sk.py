@@ -3,8 +3,6 @@ from scipy import fftpack
 import pylab as py
 #Created by: Alex Smith
 #The input file for this program is a track file (can be made from a .xyz (like from lammps) using the read_tr.py program)
-#useful for quick debugging
-f = "/Users/alexsmith/Binhua Lab/photos/DataAnalysis/useThisShortDumpToTest.xyz"
 
 #it is assumed that parseLine will only be called on a particle line,
 #so that the line will be of the form: (Particle number) (x) (y) (z) (other stuff)
