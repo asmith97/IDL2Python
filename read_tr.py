@@ -1,5 +1,10 @@
-#modified Chris Liepold's program by Alex Smith
-#should convert to _ spacing and not camel case per python style guidelines :(
+#modified Chris Liepold's program by Alex Smith in July 2016
+
+#Usage:
+#Can be used as an import into other programs or called straight through the command line
+#call from command line with python (file to convert) (optional output file name)
+#if not output file name is specified then it will get rid of the last 4 characters of the inputted 
+#file name and then add a .tr
 import sys
 import numpy as np
 
@@ -30,7 +35,7 @@ def convertToTrackFile(f):
             atomNumber = -1
             frameNumber += 0.5 # do this because there are two new frame lines between
             #each time step
-            continue
+            continue #there are no atoms to add in this line, so keep looping
 
         atomNumber += 1
         (x,y,z) = parseLine(line)
@@ -44,7 +49,10 @@ if __name__ == '__main__':
         exit(1)
     f = sys.argv[1]
     if len(sys.argv) == 2:
-        outname = f[:-4] + '.tr'
+        if len(f) >= 5:
+            outname = f[:-4] + '.tr'
+        else:
+            outname = f + '.tr'
     else:
         outname = sys.argv[2]
     outarr = convertToTrackFile(f)
