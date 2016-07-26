@@ -5,10 +5,10 @@
 #call from command line with python (file to convert) (optional output file name)
 #if not output file name is specified then it will get rid of the last 4 characters of the inputted 
 #file name and then add a .tr
+#if it ends up being too slow: consider using numpy tofile and fromfile if it starts to get too slow for the input sizes
+
 import sys
 import numpy as np
-
-#consider using numpy tofile and fromfile if it starts to get too slow for the input sizes
 
 #Takes in a string and returns whether or not it's something that marks that it's a
 #new time step. There are three conditions for this:
