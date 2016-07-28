@@ -6,6 +6,11 @@ import pylab as py
 #useful for quick debugging
 f = "/Users/alexsmith/Binhua Lab/photos/DataAnalysis/useThisShortDumpToTest.xyz"
 
+
+#Takes in a list of 2D list's and the scaling factor
+def scale(list, factor):
+    return [[x*factor,y*factor] for [x,y] in list]
+
 #it is assumed that parseLine will only be called on a particle line,
 #so that the line will be of the form: (Particle number) (x) (y) (z) (other stuff)
 def parseLine(line):
@@ -86,6 +91,7 @@ def runSK(timeStep):
 #This computes the s(k) average (equivalent to integrating over rings)
 #takes in an sk image (an array that has been returned by something like runSK)
 def skAverage(skPicture):
+    #from the IDL program by BianXiao Cui
     #make these be something that can be inputted
     diameter = 2.56
     ratio = 2.56/12 #micro meter / pixel
