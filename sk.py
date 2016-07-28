@@ -37,14 +37,12 @@ def maxY(l):
 #   steps.append(t)
 #to get the first one:
 #first = gen.next()
-
-
-#####BUG - IT IS MISSING ONE OF THE PARTICLES IN EVERY RUN
 def getTimeStep(fileName):
     f = open(fileName)
+    #the first line of a track file is always a valid line
     nextLine = f.readline() 
-    #print nextLine
     points = []
+    points.append(nextLine)
     #nextLine is "" on EOF
     currentTimestep = 0
     while nextLine != "":
@@ -58,6 +56,7 @@ def getTimeStep(fileName):
                 points = []
                 currentTimestep += 1
         else:
+            #print nextLine
             point = parseLine(nextLine)
             points.append(point)
 
