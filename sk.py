@@ -81,7 +81,7 @@ def makeImage(timeStep):
 def runSK(timeStep):
     im = makeImage(timeStep)
     skTemp = numpy.fft.ifft2(im)
-    #usually have to scale this by *10 to get it to look good
+    #usually have to scale this by *5 to get it to look good
     return numpy.fft.fftshift(numpy.abs(skTemp)**2) 
 #when combinining the results from runs that have different pixel lengths
 #(ex. if you're changing the box size) you will probably want to have some sort of
@@ -152,7 +152,7 @@ def run(timeStep):
     #plot(runSK(timeStep))
 
 #takes in a list of sofks (so it's been through the fft thing already)
-def accumulateTimeSteps(sofkList):
+def accumulateTimeSteps(listOfTimesteps):
     #set the boundary of the image to be the number of pixels in the first time step
     image = numpy.zeros((len(listOfTimesteps[0]), len(listOfTimesteps[0][0])))
     for s in listOfTimesteps:
@@ -163,3 +163,17 @@ def accumulateTimeSteps(sofkList):
             continue
     return image
 
+
+def run(f):
+    steps = []
+    sofks = []
+    for i in getTimeStep(f):
+        steps.append(i)
+    #for some reason need to skip the first elemeent
+    for i in range(len(steps) - 2):
+        i += 1
+        rescale = scale(steps[i], 5)
+        sofks.append(runSK(rescale))
+    acc = accumulateTimeSteps(sofks)
+    #plotSK(acc)
+    return acc
