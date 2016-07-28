@@ -3,6 +3,8 @@ from scipy import fftpack
 import pylab as py
 #Created by: Alex Smith
 #The input file for this program is a track file (can be made from a .xyz (like from lammps) using the read_tr.py program)
+#useful for quick debugging
+f = "/Users/alexsmith/Binhua Lab/photos/DataAnalysis/useThisShortDumpToTest.xyz"
 
 #it is assumed that parseLine will only be called on a particle line,
 #so that the line will be of the form: (Particle number) (x) (y) (z) (other stuff)
@@ -35,6 +37,9 @@ def maxY(l):
 #   steps.append(t)
 #to get the first one:
 #first = gen.next()
+
+
+#####BUG - IT IS MISSING ONE OF THE PARTICLES IN EVERY RUN
 def getTimeStep(fileName):
     f = open(fileName)
     nextLine = f.readline() 
@@ -72,6 +77,7 @@ def makeImage(timeStep):
 def runSK(timeStep):
     im = makeImage(timeStep)
     skTemp = numpy.fft.ifft2(im)
+    #usually have to scale this by *10 to get it to look good
     return numpy.fft.fftshift(numpy.abs(skTemp)**2) 
 #when combinining the results from runs that have different pixel lengths
 #(ex. if you're changing the box size) you will probably want to have some sort of
@@ -94,17 +100,24 @@ def skAverage(skPicture):
     yAxisScale = numpy.zeros(maxDistance + 1) # has length of maxDistance to correspond to the x-Axis it's associated with 
     xAxis = numpy.array([x*2*numpy.pi/ratio/len(skPicture) for x in range(maxDistance + 1)])
     #the sort of confusing thing is so that the scale of the xAxis corresponds to real units
-    jRange = len(skPicture[0]) #for the caching (does python memory alias?)
+    jRange = len(skPicture[0]) #for caching (does python memory alias?)
     #anyway, can do this because each element of skPicture has the same length
     for i in range(len(skPicture)):
         for j in range(jRange):
             distance = round(numpy.sqrt((centerX - i)**2 + (centerY - j)**2))
+            if distance < 0.00001:
+                continue
             yAxisScale[distance] += 1
             yAxis[distance] += skPicture[i,j]
-    return zip(xAxis, yAxis/ yAxisScale)
+    return zip(xAxis, yAxis/yAxisScale)
 
 def plotSKAverage(skavg):
-    py.plot([x for (x,y) in skavg], [y for (x,y) in skavg])
+    #for scaling while debugging
+    #look up the exact scaling stuff that Pascal's program had
+    #it should be on the modified s(k) program that I did
+    pixelToMicroM = 2.56
+    pixelsInXRange = 200
+    py.plot([x/(2*3.14159/(2.56/pixelToMicroM)/pixelsInXRange) for (x,y) in skavg], [y for (x,y) in skavg])
     py.show()
 
 
