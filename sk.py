@@ -6,7 +6,6 @@ import pylab as py
 #useful for quick debugging
 f = "/Users/alexsmith/Binhua Lab/photos/DataAnalysis/useThisShortDumpToTest.xyz"
 
-
 #Takes in a list of 2D list's and the scaling factor
 def scale(list, factor):
     return [[x*factor,y*factor] for [x,y] in list]
@@ -47,7 +46,7 @@ def getTimeStep(fileName):
     #the first line of a track file is always a valid line
     nextLine = f.readline() 
     points = []
-    points.append(nextLine)
+    points.append(parseLine(nextLine))
     #nextLine is "" on EOF
     currentTimestep = 0
     while nextLine != "":
@@ -61,7 +60,6 @@ def getTimeStep(fileName):
                 points = []
                 currentTimestep += 1
         else:
-            #print nextLine
             point = parseLine(nextLine)
             points.append(point)
 
@@ -169,10 +167,8 @@ def run(f):
     sofks = []
     for i in getTimeStep(f):
         steps.append(i)
-    #for some reason need to skip the first elemeent
-    for i in range(len(steps) - 2):
-        i += 1
-        rescale = scale(steps[i], 5)
+    for i in steps:
+        rescale = scale(i, 5)
         sofks.append(runSK(rescale))
     acc = accumulateTimeSteps(sofks)
     #plotSK(acc)
