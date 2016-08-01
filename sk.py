@@ -115,12 +115,7 @@ def skAverage(skPicture):
     return zip(xAxis, yAxis/yAxisScale)
 
 def plotSKAverage(skavg):
-    #for scaling while debugging
-    #look up the exact scaling stuff that Pascal's program had
-    #it should be on the modified s(k) program that I did
-    pixelToMicroM = 2.56
-    pixelsInXRange = 200
-    py.plot([x/(2*3.14159/(2.56/pixelToMicroM)/pixelsInXRange) for (x,y) in skavg], [y for (x,y) in skavg])
+    py.plot([x for (x,y) in skavg[30:]], [y for (x,y) in skavg[30:]])
     py.show()
 
 
