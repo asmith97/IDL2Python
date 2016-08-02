@@ -70,7 +70,7 @@ def makeImage(timeStep):
     totalMax = max(mX, mY) + 2
     im = numpy.zeros((totalMax, totalMax))
     for point in timeStep:
-        im[round(point[0]),round(point[1])] = 1
+        im[round(point[0]),round(point[1])] += 1
     return im
 
 #Go from .xyz to a representation of the particles on the screen as pixels
@@ -140,9 +140,8 @@ def plotSK(sofk):
     py.imshow(numpy.log10(sofk))
     py.show()
 
-def run(timeStep):
+def runTimeStep(timeStep):
     plotSK(runSK(timeStep))
-    #plot(runSK(timeStep))
 
 #takes in a list of sofks (so it's been through the fft thing already)
 def accumulateTimeSteps(listOfTimesteps):
