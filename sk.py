@@ -100,7 +100,8 @@ def skAverage(skPicture):
     maxDistance = int(round((numpy.sqrt(len(skPicture)**2 + len(skPicture[0])**2))/2.0))
     #the diagonal length /2 because we are interested in the distance from the center
     yAxis = numpy.zeros(maxDistance + 1)
-    yAxisScale = numpy.zeros(maxDistance + 1) # has length of maxDistance to correspond to the x-Axis it's associated with 
+    yAxisScale = numpy.zeros(maxDistance + 1) + 1 # has length of maxDistance to correspond to the x-Axis it's associated with want it to be all ones because we divide by it
+    #doing this doesn't change the results noticably
     xAxis = numpy.array([x*2*numpy.pi/ratio/len(skPicture) for x in range(maxDistance + 1)])
     #the sort of confusing thing is so that the scale of the xAxis corresponds to real units
     jRange = len(skPicture[0]) #for caching (does python memory alias?)
