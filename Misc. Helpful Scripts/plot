@@ -1,0 +1,16 @@
+#!/bin/bash
+#if the third argument is -l is will connect with lines
+if [[ $2 == "-l" ]]; then
+   #if the third argument is -o it will save it to the file specified by fourth argument
+  if [[ $3 == "-o" ]]; then
+    gnuplot -p -e "set term png; set output '$4'; plot '$1' with lines"  
+  else 
+    gnuplot -p -e "plot '$1' with lines"
+  fi
+elif [[ $2 == "-nl" ]]; then
+    gnuplot -p -e "plot '$1'"
+else
+    gnuplot -p -e "plot '$1' with lines"
+fi
+echo "Enjoy your day"
+    

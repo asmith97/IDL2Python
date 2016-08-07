@@ -1,0 +1,7 @@
+#!/bin/bash
+#Passed a directory as an argument (where the tiffs will go)
+if [[ -d $1 ]]; then 
+   scp (the location on the cluster):~/*.tiff ./$1
+else
+echo "Pass in a directory to put the files in"
+fi

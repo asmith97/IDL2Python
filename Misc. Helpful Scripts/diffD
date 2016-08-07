@@ -1,0 +1,3 @@
+#!/bin/bash
+#Used to get it to only print the different lines and to print them side by side
+diff $1 $2 --suppress-common-lines -y
