@@ -15,6 +15,8 @@
 // It is TSV with column 1 the x's and column 2 the y's
 //to compile: gcc -O3 gr.c -o gr -Wall -Wextra (-O3 definitely reccomended
 //for max optimizations)
+//if you are not using a mac:
+//you will need to add a -lm after the -Wextra
 //-o gr speicifes the name of the binary that you want it to make
 //run using ./gr (input file) (output file name) (particle size)
 //NOTE IT WILL OVERWRITE THE CONTENTS OF THE FILE WITH NAME "ouput file name"
