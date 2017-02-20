@@ -8,6 +8,7 @@ Run: gcc -O3 gr.c -o gr
 -O3 (note that it is the capital letter O) turns on the highest levels of optimization by the compiler
 -o gr specifies that we want the binary to be named gr
 replace gr with whatever you want the binary to be named
+(If you get an error when doing this related to mathematical funcitons, then add a -lm at the end of the command like this: gcc -O3 gr.c -o gr -lm)
 6. Then, you can run the g(r) program by typing ./gr (arguments)
 I recommend adding the directory gr is in to your path (just google this)
 
